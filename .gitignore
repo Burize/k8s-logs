@@ -1,0 +1,12 @@
+*.log
+.idea
+.vscode
+.DS_Store
+*.pyc
+.python-version
+.pytest_cache/
+
+/venv/
+
+.env
+

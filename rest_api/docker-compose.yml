@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:15.2-alpine
+    environment:
+      - POSTGRES_DB=k8s_logs_rest_api
+      - POSTGRES_USER=rest_api
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    container_name: redis-fast-api
+    image: redis:7.0.4
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    expose:
+      - 6379
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    command: redis-server
+
+volumes:
+  pg-data:
+  redis-data:
