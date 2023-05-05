@@ -14,9 +14,10 @@ router = APIRouter()
 class CreateuserDTO:
     username: str
     password: str
+    email: str
 
 
 @router.post('')
 def create_user(dto: CreateuserDTO, user_repository: UserRepository = Depends()):
-    user_repository.create_user(username=dto.username, password=dto.password)
+    user_repository.create_user(username=dto.username, password=dto.password, email=dto.email)
     return Response(status_code=HTTP_200_OK)

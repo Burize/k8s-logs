@@ -20,6 +20,7 @@ class UserAuthenticateDTO:
 @dataclass
 class UserDTO:
     id: UUID
+    email: str
 
 
 @router.post('')
@@ -27,5 +28,4 @@ class UserDTO:
 def authenticate(dto: UserAuthenticateDTO, auth_service: AuthService = Depends()) -> UserDTO:
     user = auth_service.authenticate(username=dto.username, password=dto.password)
 
-    return UserDTO(id=user.id)
-
+    return UserDTO(id=user.id, email=user.email)
