@@ -1,0 +1,36 @@
+_format_version: "3.0"
+services:
+- name: protected_rest_api
+  host: host.docker.internal
+  port: 3000
+  protocol: http
+  routes:
+  - name: rest_api_route
+    https_redirect_status_code: 426
+    paths:
+    - /
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    strip_path: true
+consumers:
+- username: authorized_user
+jwt_secrets:
+  - consumer: authorized_user
+    secret: "secret_for_jwt"
+plugins:
+- name: jwt
+  service: protected_rest_api
+  enabled: true
+  config:
+    key_claim_name: iss
+    claims_to_verify:
+    - exp
+- name: auth_plugin
+  service: protected_rest_api
+  enabled: true
+  config:
+    auth_service_url: 'http://host.docker.internal:8083'
+    auth_path: '/api/authenticate'
+    protected_service_url: 'http://host.docker.internal:3000'
