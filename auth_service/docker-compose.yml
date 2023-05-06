@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: auth_service_db
     image: postgres:15.2-alpine
     environment:
       - POSTGRES_DB=k8s_logs_rest_api
@@ -9,6 +10,20 @@ services:
       - pg-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  backend:
+    container_name: auth_service_backend
+    build: .
+    volumes:
+      - ./:/srv
+    environment:
+      DATABASE_URL: postgresql://rest_api:1234@db/k8s_logs_rest_api
+      SERVICE_EXHANGE_HEADER_NAME: X-SERVICE-EXHANGE-KEY
+      SERVICE_EXHANGE_KEY: SERVICE_EXCHANGE_SECRET_KEY
+    ports:
+      - "127.0.0.1:8083:8000"
+    depends_on:
+      - db
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 volumes:
   pg-data:
