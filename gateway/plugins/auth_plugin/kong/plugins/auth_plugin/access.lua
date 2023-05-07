@@ -4,6 +4,17 @@ local cjson = require "cjson.safe"
 local jwt = require "resty.jwt"
 local module = {}
 
+function build_request_url_to_auth_service(auth_service_url)
+    local parsed_auth_service_url = url.parse(auth_service_url)
+    local parsed_url = {
+        scheme = kong.request.get_forwarded_scheme() or kong.request.get_scheme(),
+        host = parsed_auth_service_url.host,
+        port = parsed_auth_service_url.port,
+        path = kong.request.get_path(),
+    }
+    return url.build(parsed_url)
+end
+
 function generate_jwt_token(jwt_credentials_url, jwt_payload, jwt_expiration_time)
      local ok, error, response = request.send(
             {
@@ -16,8 +27,6 @@ function generate_jwt_token(jwt_credentials_url, jwt_payload, jwt_expiration_tim
     end
 
     local decoded_response = cjson.decode(response.body)
-    kong.log(tostring(decoded_response.data[1].secret))
-    kong.log(tostring(decoded_response.data[1].key))
 
     local jwt_secret = decoded_response.data[1].secret
     local consumer_key = decoded_response.data[1].key
@@ -36,21 +45,8 @@ function generate_jwt_token(jwt_credentials_url, jwt_payload, jwt_expiration_tim
 
     local jwt_token_signed = jwt:sign(jwt_secret, jwt_token)
 
-    kong.log(jwt_token_signed)
-
     return jwt_token_signed, nil
 
-end
-
-function build_request_url_to_auth_service(auth_service_url)
-    local parsed_auth_service_url = url.parse(auth_service_url)
-    local parsed_url = {
-        scheme = kong.request.get_forwarded_scheme() or kong.request.get_scheme(),
-        host = parsed_auth_service_url.host,
-        port = parsed_auth_service_url.port,
-        path = kong.request.get_path(),
-    }
-    return url.build(parsed_url)
 end
 
 local function authenticate(config)

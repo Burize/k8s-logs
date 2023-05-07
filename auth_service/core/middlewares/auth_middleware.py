@@ -6,8 +6,8 @@ import core.settings as settings
 
 
 async def auth_middleware(request: Request, call_next):
-    authorization_header = request.headers.get(settings.SERVICE_EXHANGE_HEADER_NAME, None)
-    invalid_authorization_header = not authorization_header or authorization_header != f'Bearer {settings.SERVICE_EXHANGE_KEY}'
+    authorization_header = request.headers.get(settings.SERVICE_EXCHANGE_HEADER_NAME, None)
+    invalid_authorization_header = not authorization_header or authorization_header != f'Bearer {settings.SERVICE_EXCHANGE_KEY}'
     if request.url.path != '/api/authenticate' and invalid_authorization_header:
         return Response(status_code=HTTP_401_UNAUTHORIZED, content='UNAUTHORIZED')
 

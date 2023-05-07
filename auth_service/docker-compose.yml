@@ -17,8 +17,8 @@ services:
       - ./:/srv
     environment:
       DATABASE_URL: postgresql://rest_api:1234@db/k8s_logs_rest_api
-      SERVICE_EXHANGE_HEADER_NAME: X-SERVICE-EXHANGE-KEY
-      SERVICE_EXHANGE_KEY: SERVICE_EXCHANGE_SECRET_KEY
+      SERVICE_EXCHANGE_HEADER_NAME: X-SERVICE-EXCHANGE-KEY
+      SERVICE_EXCHANGE_KEY: SERVICE_EXCHANGE_SECRET_KEY
     ports:
       - "127.0.0.1:8083:8000"
     depends_on:

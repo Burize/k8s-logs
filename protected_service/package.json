@@ -1,10 +1,11 @@
 {
   "name": "protected_rest_api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
-    "scripts": {
-    "start": "esno watch index.ts"
+  "scripts": {
+    "start": "esno index.ts",
+    "watch": "esno watch index.ts"
   },
   "dependencies": {
     "@koa/router": "^10.0.0",

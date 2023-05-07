@@ -13,4 +13,4 @@ COPY . /app
 WORKDIR /app
 RUN mkdir ./kong-runtime
 
-ENTRYPOINT ["kong", "start", "-c", "kong.conf"]
+CMD ["kong", "start", "-c", "kong.conf"]

@@ -1,0 +1,11 @@
+services:
+  backend:
+    container_name: protected_service_backend
+    build: .
+    environment:
+      SERVICE_EXCHANGE_HEADER_NAME: X-SERVICE-EXCHANGE-KEY
+      SERVICE_EXCHANGE_KEY: SERVICE_EXCHANGE_SECRET_KEY
+      USER_HEADER_NAME: X-USER
+    ports:
+      - "127.0.0.1:3000:3000"
+    command: yarn start

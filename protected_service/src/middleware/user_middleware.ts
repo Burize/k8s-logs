@@ -19,8 +19,13 @@ function paraseToken(jwt_token: string): IUser {
 
 async function userMiddleware(ctx: Context, next: Awaited<Function>) {
     const userHeaderName = process.env.USER_HEADER_NAME || ''
-    const userToken = ctx.headers[userHeaderName.toLowerCase()] || ''
-    ctx.user = paraseToken(userToken as string)
+    const userHeader = (ctx.headers[userHeaderName.toLowerCase()] || '') as string
+    const userToken = userHeader.match(/Bearer (.*)/)
+
+    if (!userToken || !userToken[1]) {
+        throw Error('Invalid user token')
+    }
+    ctx.user = paraseToken(userToken[1])
 
     await next()
 }

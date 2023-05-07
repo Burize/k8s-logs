@@ -5,11 +5,10 @@ return {
   name = "auth_plugin",
   fields = {
     {
-      -- this plugin will only be applied to Services or Routes
+      -- This plugin will only be applied to Services or Routes
       consumer = typedefs.no_consumer
     },
     {
-      -- this plugin will only run within Nginx HTTP module
       protocols = typedefs.protocols_http
     },
     {
@@ -17,12 +16,12 @@ return {
                 type = "record",
                 fields = {
                     { auth_service_url = typedefs.url({ required = true }), },
-                    { auth_path = { type = "string", required = false} },
+                    { auth_path = { type = "string", required = true} },
                     { protected_service_url = typedefs.url({ required = true }), },
-                    { services_exchange_header_name = { type = "string", required = false, default = "X-SERVICE-EXHANGE-KEY" }, },
-                    { services_exchange_key = {type = "string", required = false, default = '1400' }, },
-                    { user_header_name = {type = "string", required = false, default = 'X-USER' }, },
-                    { jwt_credentials_url = {type = "string", required = false, default = 'http://0.0.0.0:8001/consumers/authorized_user/jwt'}},
+                    { services_exchange_header_name = { type = "string", required = true }, },
+                    { services_exchange_key = {type = "string", required = true }, },
+                    { user_header_name = {type = "string", required = true }, },
+                    { jwt_credentials_url = {type = "string", required = true}},
                     { jwt_expiration_time = {type = "number", required = false, default = 300000}},
                 }
             },
