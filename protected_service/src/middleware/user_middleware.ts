@@ -23,7 +23,7 @@ async function userMiddleware(ctx: Context, next: Awaited<Function>) {
     const userToken = userHeader.match(/Bearer (.*)/)
 
     if (!userToken || !userToken[1]) {
-        throw Error('Invalid user token')
+        ctx.throw(401, 'Invalid user token');
     }
     ctx.user = paraseToken(userToken[1])
 
