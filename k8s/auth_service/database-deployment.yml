@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-database
+  labels:
+    app: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+      name: auth-service-database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: auth-service
+        name: auth-service-database
+    spec:
+      containers:
+        - image: postgres:15.2-alpine
+          name: auth-service-database
+          env:
+            - name: POSTGRES_DB
+              value: k8s_logs_rest_api
+            - name: POSTGRES_PASSWORD
+              value: "1234"
+            - name: POSTGRES_USER
+              value: rest_api
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-data
+      restartPolicy: Always
+      volumes:
+        - name: pg-data
+          persistentVolumeClaim:
+            claimName: database-volume-claim

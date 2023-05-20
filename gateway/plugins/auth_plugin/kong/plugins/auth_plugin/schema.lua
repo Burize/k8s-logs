@@ -17,7 +17,6 @@ return {
                 fields = {
                     { auth_service_url = typedefs.url({ required = true }), },
                     { auth_path = { type = "string", required = true} },
-                    { protected_service_url = typedefs.url({ required = true }), },
                     { services_exchange_header_name = { type = "string", required = true }, },
                     { services_exchange_key = {type = "string", required = true }, },
                     { user_header_name = {type = "string", required = true }, },

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: protected-service-api
+  labels:
+    app: protected-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: protected-service
+      name: protected-service-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: protected-service
+        name: protected-service-api
+    spec:
+      containers:
+        - args:
+            - yarn
+            - start
+          env:
+            - name: USER_HEADER_NAME
+              value: X-USER
+            - name: SERVICE_EXCHANGE_HEADER_NAME
+              value: X-SERVICE-EXCHANGE-KEY
+            - name: SERVICE_EXCHANGE_KEY
+              value: SERVICE_EXCHANGE_SECRET_KEY
+          name: protected-service-backend
+          image: protected_service/backend
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+              hostIP: 127.0.0.1
+      restartPolicy: Always

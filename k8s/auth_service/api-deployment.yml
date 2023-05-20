@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-api
+  labels:
+    app: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+      name: auth-service-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: auth-service
+        name: auth-service-api
+    spec:
+      containers:
+        - args:
+            - uvicorn
+            - main:app
+            - --reload
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8000"
+          env:
+            - name: DATABASE_URL
+              value: postgresql://rest_api:1234@auth-service-database/k8s_logs_rest_api
+            - name: SERVICE_EXCHANGE_HEADER_NAME
+              value: X-SERVICE-EXCHANGE-KEY
+            - name: SERVICE_EXCHANGE_KEY
+              value: SERVICE_EXCHANGE_SECRET_KEY
+          name: auth-service-backend
+          image: auth_service/backend
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+              hostIP: 127.0.0.1
+      restartPolicy: Always

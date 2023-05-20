@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+      name: gateway-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gateway
+        name: gateway-api
+    spec:
+      containers:
+        - args:
+            - kong
+            - start
+            - -c
+            - kong.conf
+          name: gateway
+          image: gateway
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+              hostIP: 127.0.0.1
+            - containerPort: 8001
+              hostIP: 127.0.0.1
+      restartPolicy: Always

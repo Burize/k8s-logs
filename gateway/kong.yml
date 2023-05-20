@@ -1,7 +1,7 @@
 _format_version: "3.0"
 services:
 - name: protected_rest_api
-  host: host.docker.internal
+  host: protected-service-api
   port: 3000
   protocol: http
   routes:
@@ -31,9 +31,8 @@ plugins:
   service: protected_rest_api
   enabled: true
   config:
-    auth_service_url: 'http://host.docker.internal:8083'
+    auth_service_url: 'http://auth-service-api:8083'
     auth_path: '/api/authenticate'
-    protected_service_url: 'http://host.docker.internal:3000'
     services_exchange_header_name: 'X-SERVICE-EXCHANGE-KEY'
     services_exchange_key: 'SERVICE_EXCHANGE_SECRET_KEY'
     user_header_name: 'X-USER'
