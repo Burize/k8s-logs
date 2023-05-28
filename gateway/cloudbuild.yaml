@@ -1,0 +1,20 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/$PROJECT_ID/k8s-logs-repo/gateway-api',
+    '--build-arg',
+    'SERVICE_EXCHANGE_HEADER_NAME=${_SERVICE_EXCHANGE_HEADER_NAME}',
+    '--build-arg',
+    'SERVICE_EXCHANGE_KEY=${_SERVICE_EXCHANGE_KEY}',
+    '--build-arg',
+    'AUTH_PATH=${_AUTH_PATH}',
+    '--build-arg',
+    'AUTH_SERVICE_URL=${_AUTH_SERVICE_URL}',
+    '--build-arg',
+    'USER_HEADER_NAME=${_USER_HEADER_NAME}',
+    '.'
+  ]
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/k8s-logs-repo/gateway-api'

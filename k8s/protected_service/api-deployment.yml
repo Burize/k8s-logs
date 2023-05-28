@@ -24,15 +24,24 @@ spec:
             - start
           env:
             - name: USER_HEADER_NAME
-              value: X-USER
+              valueFrom:
+                configMapKeyRef:
+                  name: protected-service-api-env
+                  key: USER_HEADER_NAME
             - name: SERVICE_EXCHANGE_HEADER_NAME
-              value: X-SERVICE-EXCHANGE-KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: protected-service-api-env
+                  key: SERVICE_EXCHANGE_HEADER_NAME
             - name: SERVICE_EXCHANGE_KEY
-              value: SERVICE_EXCHANGE_SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: protected-service-api-env
+                  key: SERVICE_EXCHANGE_KEY
           name: protected-service-backend
-          image: protected_service/backend
-          imagePullPolicy: Never
+          image: us-central1-docker.pkg.dev/k8s-logs-387417/k8s-logs-repo/protected-service-api:latest
+#          image: protected_service/backend
+#          imagePullPolicy: Never
           ports:
             - containerPort: 3000
-              hostIP: 127.0.0.1
       restartPolicy: Always

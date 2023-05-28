@@ -9,9 +9,9 @@ spec:
   capacity:
     storage: 200M
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   hostPath:
-    path: /mnt/data
+    path: /var/lib/data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -22,7 +22,7 @@ metadata:
 spec:
   storageClassName: local-small
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
       storage: 200M

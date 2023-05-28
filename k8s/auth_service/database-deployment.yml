@@ -23,11 +23,20 @@ spec:
           name: auth-service-database
           env:
             - name: POSTGRES_DB
-              value: k8s_logs_rest_api
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-database-env
+                  key: POSTGRES_DB
             - name: POSTGRES_PASSWORD
-              value: "1234"
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-database-env
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_USER
-              value: rest_api
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-database-env
+                  key: POSTGRES_USER
           ports:
             - containerPort: 5432
           volumeMounts:

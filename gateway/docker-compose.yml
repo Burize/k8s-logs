@@ -1,7 +1,14 @@
 services:
   gateway:
     container_name: gateway
-    build: .
+    build:
+      context: .
+      args:
+        SERVICE_EXCHANGE_HEADER_NAME: X-SERVICE-EXCHANGE-KEY
+        SERVICE_EXCHANGE_KEY: SERVICE_EXCHANGE_SECRET_KEY
+        AUTH_PATH: /api/authenticate
+        AUTH_SERVICE_URL: http://auth-service-api:8083
+        USER_HEADER_NAME: X-USER
     ports:
       - "8000:8000"
       - "8001:8001"

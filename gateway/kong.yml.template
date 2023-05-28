@@ -31,11 +31,11 @@ plugins:
   service: protected_rest_api
   enabled: true
   config:
-    auth_service_url: 'http://auth-service-api:8083'
-    auth_path: '/api/authenticate'
-    services_exchange_header_name: 'X-SERVICE-EXCHANGE-KEY'
-    services_exchange_key: 'SERVICE_EXCHANGE_SECRET_KEY'
-    user_header_name: 'X-USER'
+    auth_service_url: '{{ auth_service_url }}'
+    auth_path: '{{ auth_path }}'
+    services_exchange_header_name: '{{ service_exchange_header_name }}'
+    services_exchange_key: '{{ service_exchange_key }}'
+    user_header_name: '{{ user_header_name }}'
     jwt_credentials_url: 'http://0.0.0.0:8001/consumers/authorized_user/jwt'
 - name: request-transformer
   service: protected_rest_api
@@ -43,7 +43,7 @@ plugins:
   config:
     rename:
       headers:
-        - 'Authorization:X-USER'
+        - 'Authorization:{{ user_header_name }}'
     add:
       headers:
-        - 'X-SERVICE-EXCHANGE-KEY:Bearer SERVICE_EXCHANGE_SECRET_KEY'
+        - '{{ service_exchange_header_name }}:Bearer {{ service_exchange_key }}'

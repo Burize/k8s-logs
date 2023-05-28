@@ -27,17 +27,28 @@ spec:
             - 0.0.0.0
             - --port
             - "8000"
+            - --log-config
+            - logging_config.conf
           env:
             - name: DATABASE_URL
-              value: postgresql://rest_api:1234@auth-service-database/k8s_logs_rest_api
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-api-env
+                  key: DATABASE_URL
             - name: SERVICE_EXCHANGE_HEADER_NAME
-              value: X-SERVICE-EXCHANGE-KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-api-env
+                  key: SERVICE_EXCHANGE_HEADER_NAME
             - name: SERVICE_EXCHANGE_KEY
-              value: SERVICE_EXCHANGE_SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-api-env
+                  key: SERVICE_EXCHANGE_KEY
           name: auth-service-backend
-          image: auth_service/backend
-          imagePullPolicy: Never
+          image: us-central1-docker.pkg.dev/k8s-logs-387417/k8s-logs-repo/auth-service-api:latest
+#          image: auth_service/backend
+#          imagePullPolicy: Never
           ports:
             - containerPort: 8000
-              hostIP: 127.0.0.1
       restartPolicy: Always
