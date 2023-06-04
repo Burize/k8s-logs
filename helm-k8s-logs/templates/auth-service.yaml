@@ -5,6 +5,8 @@ metadata:
   namespace: k8s-logs
   labels:
     app: auth-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: 1
   selector:
@@ -32,24 +34,32 @@ spec:
             - logging_config.conf
           env:
             - name: DATABASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: auth-service-api-env
-                  key: DATABASE_URL
+              value: {{ .Values.authService.env.DATABASE_URL }}
             - name: SERVICE_EXCHANGE_HEADER_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: auth-service-api-env
-                  key: SERVICE_EXCHANGE_HEADER_NAME
+              value: {{ .Values.authService.env.SERVICE_EXCHANGE_HEADER_NAME }}
             - name: SERVICE_EXCHANGE_KEY
-              valueFrom:
-                configMapKeyRef:
-                  name: auth-service-api-env
-                  key: SERVICE_EXCHANGE_KEY
+              value: {{ .Values.authService.env.SERVICE_EXCHANGE_KEY }}
           name: auth-service-backend
-          image: us-central1-docker.pkg.dev/k8s-logs-387417/k8s-logs-repo/auth-service-api:latest
-#          image: auth_service/backend
-#          imagePullPolicy: Never
+          image: {{ .Values.authService.image}}
+          imagePullPolicy: {{ .Values.imagePolicy}}
           ports:
             - containerPort: 8000
       restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service-api
+  namespace: k8s-logs
+  labels:
+    app: auth-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  selector:
+    name: auth-service-api
+  ports:
+    - name: "8083"
+      port: 8083
+      targetPort: 8000

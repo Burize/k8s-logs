@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: protected-service-api
+  namespace: k8s-logs
+  labels:
+    app: protected-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: protected-service
+      name: protected-service-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: protected-service
+        name: protected-service-api
+    spec:
+      containers:
+        - args:
+            - yarn
+            - start
+          env:
+            - name: USER_HEADER_NAME
+              value: {{ .Values.protectedService.env.USER_HEADER_NAME }}
+            - name: SERVICE_EXCHANGE_HEADER_NAME
+              value: {{ .Values.protectedService.env.SERVICE_EXCHANGE_HEADER_NAME }}
+            - name: SERVICE_EXCHANGE_KEY
+              value: {{ .Values.protectedService.env.SERVICE_EXCHANGE_KEY }}
+          name: protected-service-backend
+          image: {{ .Values.protectedService.image }}
+          imagePullPolicy: {{ .Values.imagePolicy }}
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: protected-service-api
+  namespace: k8s-logs
+  labels:
+    app: protected-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  selector:
+    name: protected-service-api
+  ports:
+    - name: "3000"
+      port: 3000
+      targetPort: 3000

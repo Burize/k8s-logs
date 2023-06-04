@@ -1,0 +1,18 @@
+imagePolicy: IfNotPresent # use Never for local deployment
+authService:
+  image: us-central1-docker.pkg.dev/k8s-logs-387417/k8s-logs-repo/auth-service-api:latest
+  env:
+    POSTGRES_DB: "k8s_logs_rest_api"
+    POSTGRES_PASSWORD: "1234"
+    POSTGRES_USER: "rest_api"
+    DATABASE_URL: "postgresql://rest_api:1234@auth-service-database/k8s_logs_rest_api"
+    SERVICE_EXCHANGE_HEADER_NAME: "X-SERVICE-EXCHANGE-KEY"
+    SERVICE_EXCHANGE_KEY: "SERVICE_EXCHANGE_SECRET_KEY"
+protectedService:
+  image: us-central1-docker.pkg.dev/k8s-logs-387417/k8s-logs-repo/protected-service-api:latest
+  env:
+    USER_HEADER_NAME: "X-USER"
+    SERVICE_EXCHANGE_HEADER_NAME: "X-SERVICE-EXCHANGE-KEY"
+    SERVICE_EXCHANGE_KEY: "SERVICE_EXCHANGE_SECRET_KEY"
+gateway:
+  image: us-central1-docker.pkg.dev/k8s-logs-387417/k8s-logs-repo/gateway-api:latest

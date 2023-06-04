@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api
+  namespace: k8s-logs
+  labels:
+    app: gateway
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+      name: gateway-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gateway
+        name: gateway-api
+    spec:
+      containers:
+        - args:
+            - kong
+            - start
+            - -c
+            - kong.conf
+          name: gateway-api
+          image: {{ .Values.gateway.image }}
+          imagePullPolicy: {{ .Values.imagePolicy}}
+          ports:
+            - containerPort: 8000
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-api
+  namespace: k8s-logs
+  labels:
+    app: gateway
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: LoadBalancer
+  selector:
+    name: gateway-api
+  ports:
+    - name: "8000"
+      port: 8000
+      targetPort: 8000
+    - name: "8001"
+      port: 8001
+      targetPort: 8001

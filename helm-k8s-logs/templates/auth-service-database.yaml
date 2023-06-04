@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-database
+  namespace: k8s-logs
+  labels:
+    app: auth-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+      name: auth-service-database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: auth-service
+        name: auth-service-database
+    spec:
+      containers:
+        - image: postgres:15.2-alpine
+          name: auth-service-database
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.authService.env.POSTGRES_DB }}
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.authService.env.POSTGRES_PASSWORD }}"
+            - name: POSTGRES_USER
+              value: {{ .Values.authService.env.POSTGRES_USER }}
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-data
+      restartPolicy: Always
+      volumes:
+        - name: pg-data
+          persistentVolumeClaim:
+            claimName: database-volume-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service-database
+  namespace: k8s-logs
+  labels:
+    app: auth-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  selector:
+    name: auth-service-database
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-small-volume
+  namespace: k8s-logs
+  labels:
+    type: local
+    app: auth-service
+spec:
+  storageClassName: local-small
+  capacity:
+    storage: 200M
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-volume-claim
+  namespace: k8s-logs
+  labels:
+    app: auth-service
+spec:
+  storageClassName: local-small
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 200M
