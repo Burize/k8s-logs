@@ -27,7 +27,7 @@ resource "google_pubsub_subscription" "logs_subscription" {
   name = var.subscription_name
 
   push_config {
-    push_endpoint = "https://gcp-intake.logs.us3.datadoghq.com/api/v2/logs?dd-api-key=${var.datadog_api_key}&dd-protocol=gcp"
+    push_endpoint = "https://gcp-intake.logs.${var.datadog_site}/api/v2/logs?dd-api-key=${var.datadog_api_key}&dd-protocol=gcp"
   }
 
   depends_on = [

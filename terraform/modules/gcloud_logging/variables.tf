@@ -22,3 +22,8 @@ variable datadog_api_key {
   type = string
   description = "Datadog API key"
 }
+
+variable datadog_site {
+  type = string
+  description = "Datadog site. This service provides several regions"
+}
