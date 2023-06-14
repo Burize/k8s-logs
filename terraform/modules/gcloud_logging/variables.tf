@@ -3,9 +3,9 @@ variable gc_project_id {
   description = "ID of a google cloud project"
 }
 
-variable topic_id {
+variable topic_name {
   type = string
-  description = "Id/name of a Pub/Sub Topic"
+  description = "Pub/Sub topic name"
 }
 
 variable sink_name {
@@ -15,7 +15,7 @@ variable sink_name {
 
 variable subscription_name {
   type = string
-  description = "Id/name of a subscription to subscribe to a Pub/Sub Topic"
+  description = "Name of a subscription to subscribe to a Pub/Sub Topic"
 }
 
 variable datadog_api_key {
