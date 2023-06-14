@@ -11,3 +11,8 @@ node_modules/
 
 .env
 
+*.terraform
+*.tfstate
+*.tfstate.backup
+**/.terragrunt-cache/*
+gc-keys.json
