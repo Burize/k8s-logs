@@ -12,7 +12,6 @@ node_modules/
 .env
 
 *.terraform
-*.terraform.lock.hcl
 *.tfstate
 *.tfstate.backup
 **/.terragrunt-cache/*

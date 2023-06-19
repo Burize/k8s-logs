@@ -1,15 +1,5 @@
-provider "google" {
-  project = var.gc_project_id
-}
-
 resource "google_pubsub_topic" "logs_topic" {
   name = var.topic_name
-}
-
-resource "google_project_iam_member" "roles" {
-  project = var.gc_project_id
-  role = "roles/pubsub.publisher"
-  member = "serviceAccount:cloud-logs@system.gserviceaccount.com"
 }
 
 resource "google_logging_project_sink" "logs_sink" {
@@ -17,9 +7,16 @@ resource "google_logging_project_sink" "logs_sink" {
   destination = "pubsub.googleapis.com/projects/${var.gc_project_id}/topics/${var.topic_name}"
   filter = "resource.type = k8s_container AND resource.labels.container_name != agent AND resource.labels.container_name != konnectivity-agent AND resource.labels.container_name != process-agent AND resource.labels.container_name != trace-agent AND resource.labels.container_name != cluster-agent AND resource.labels.container_name != fluentbit-gke"
 
+  unique_writer_identity = true
   depends_on = [
     google_pubsub_topic.logs_topic
  ]
+}
+
+resource "google_project_iam_member" "roles" {
+  project = var.gc_project_id
+  role = "roles/pubsub.publisher"
+  member = google_logging_project_sink.logs_sink.writer_identity
 }
 
 resource "google_pubsub_subscription" "logs_subscription" {
