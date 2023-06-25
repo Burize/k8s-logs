@@ -13,6 +13,10 @@ steps:
     '--build-arg',
     'AUTH_SERVICE_URL=${_AUTH_SERVICE_URL}',
     '--build-arg',
+    'PROTECTED_SERVICE_HOST=${_PROTECTED_SERVICE_HOST}',
+    '--build-arg',
+    'PROTECTED_SERVICE_PORT=${_PROTECTED_SERVICE_PORT}',
+    '--build-arg',
     'USER_HEADER_NAME=${_USER_HEADER_NAME}',
     '.'
   ]

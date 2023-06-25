@@ -8,6 +8,8 @@ services:
         SERVICE_EXCHANGE_KEY: SERVICE_EXCHANGE_SECRET_KEY
         AUTH_PATH: /api/authenticate
         AUTH_SERVICE_URL: http://auth-service-api:8083
+        PROTECTED_SERVICE_HOST: protected-service-api
+        PROTECTED_SERVICE_PORT: 3000
         USER_HEADER_NAME: X-USER
     ports:
       - "8000:8000"

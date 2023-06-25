@@ -27,7 +27,6 @@ spec:
             - kong.conf
           name: gateway-api
           image: us-central1-docker.pkg.dev/k8s-logs-387417/k8s-logs-repo/gateway-api:latest
-#          imagePullPolicy: Never
           ports:
             - containerPort: 8000
       restartPolicy: Always

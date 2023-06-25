@@ -7,7 +7,7 @@ const getUserInfo = (ctx: Context) => {
 
 
 function registerRoutes(router: Router) {
-  router.get('/user', getUserInfo);
+  router.get('/api/user', getUserInfo);
 }
 
 export { registerRoutes };

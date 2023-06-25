@@ -9,6 +9,8 @@ ARG SERVICE_EXCHANGE_KEY
 ARG AUTH_PATH
 ARG AUTH_SERVICE_URL
 ARG USER_HEADER_NAME
+ARG PROTECTED_SERVICE_HOST
+ARG PROTECTED_SERVICE_PORT
 EXPOSE 8000
 EXPOSE 8001
 USER 0
@@ -20,6 +22,8 @@ RUN luarocks install lua-resty-jwt
 COPY . /app
 WORKDIR /app
 RUN sed -e "s~{{ auth_service_url }}~${AUTH_SERVICE_URL}~g" \
+        -e "s~{{ protected_service_host }}~${PROTECTED_SERVICE_HOST}~g" \
+        -e "s~{{ protected_service_port }}~${PROTECTED_SERVICE_PORT}~g" \
         -e "s~{{ auth_path }}~${AUTH_PATH}~g" \
         -e "s~{{ service_exchange_header_name }}~${SERVICE_EXCHANGE_HEADER_NAME}~g" \
         -e "s~{{ service_exchange_key }}~${SERVICE_EXCHANGE_KEY}~g" \

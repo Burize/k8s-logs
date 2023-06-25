@@ -1,8 +1,8 @@
 _format_version: "3.0"
 services:
 - name: protected_rest_api
-  host: protected-service-api
-  port: 3000
+  host: {{ protected_service_host }}
+  port: {{ protected_service_port }}
   protocol: http
   routes:
   - name: rest_api_route
